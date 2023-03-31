@@ -171,6 +171,7 @@ async function chatCompletions(req, res) {
             if(DEBUG){
                 console.log("[chatCompletions]prompt:", prompt)
             }
+            
             // if (DEBUG) console.log(`[CHAT] [${req.user.data.id}] [${req.user.data.name}] [MAX-TOKENS:${req.body.max_tokens ?? "unset"}] ${prompt}`);
 
             let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
