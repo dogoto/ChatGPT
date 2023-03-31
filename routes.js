@@ -113,23 +113,23 @@ async function completions(req, res) {
     }
     else {
         try {
-            let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
             let params = {}
             Object.assign(params, req.body)
             params.model |= MODEL;
 
-            const response = await openAi.createCompletion(params);
+            // let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
+            // const response = await openAi.createCompletion(params);
 
-            // const response = await axios.post(
-            //     `https://api.openai.com/v1/completions`, req.body,
-            //     {
-            //         headers: {
-            //             Accept: "application/json",
-            //             "Content-Type": "application/json",
-            //             Authorization: `Bearer ${key}`,
-            //         },
-            //     },
-            // );
+            const response = await axios.post(
+                `https://api.openai.com/v1/completions`, params,
+                {
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${key}`,
+                    },
+                },
+            );
 
             if(DEBUG){
                 console.log("[completions]nostream response:")
@@ -279,23 +279,23 @@ async function chatCompletions(req, res) {
     }
     else {
         try {
-            let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
             let params = {}
             Object.assign(params, req.body)
             params.model |= MODEL;
 
-            const response = await openAi.createChatCompletion(params);
+            // let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
+            // const response = await openAi.createChatCompletion(params);
 
-            // const response = await axios.post(
-            //     `https://api.openai.com/v1/chat/completions`, req.body,
-            //     {
-            //         headers: {
-            //             Accept: "application/json",
-            //             "Content-Type": "application/json",
-            //             Authorization: `Bearer ${key}`,
-            //         },
-            //     },
-            // );
+            const response = await axios.post(
+                `https://api.openai.com/v1/chat/completions`, params,
+                {
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${key}`,
+                    },
+                },
+            );
 
             if(DEBUG){
                 console.log("[chatCompletions]nostream response:")
