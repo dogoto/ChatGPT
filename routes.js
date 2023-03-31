@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Configuration, OpenAIApi } from "openai";
 import { streamCompletion, generateId, getOpenAIKey } from "./functions.js"
-import { DEBUG, MODERATION } from "./config.js";
+import { DEBUG, MODERATION, MODEL } from "./config.js";
 
 async function completions(req, res) {
     let orgId = generateId();
@@ -113,16 +113,23 @@ async function completions(req, res) {
     }
     else {
         try {
-            const response = await axios.post(
-                `https://api.openai.com/v1/completions`, req.body,
-                {
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${key}`,
-                    },
-                },
-            );
+            let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
+            let params = {}
+            Object.assign(params, req.body)
+            params.model |= MODEL;
+
+            const response = await openAi.createCompletion(params);
+
+            // const response = await axios.post(
+            //     `https://api.openai.com/v1/completions`, req.body,
+            //     {
+            //         headers: {
+            //             Accept: "application/json",
+            //             "Content-Type": "application/json",
+            //             Authorization: `Bearer ${key}`,
+            //         },
+            //     },
+            // );
 
             if(DEBUG){
                 console.log("[completions]nostream response:")
@@ -134,6 +141,7 @@ async function completions(req, res) {
 
             return res.status(200).send(response.data);
         } catch (error) {
+            error.response && error.response.data && console.log(error.response.data)
             try {
                 error.response.data.error.message = error.response.data.error.message.replace(/org-[a-zA-Z0-9]+/, orgId);
                 return res.status(error.response.status).send(error.response.data);
@@ -171,7 +179,7 @@ async function chatCompletions(req, res) {
             if(DEBUG){
                 console.log("[chatCompletions]prompt:", prompt)
             }
-            
+
             // if (DEBUG) console.log(`[CHAT] [${req.user.data.id}] [${req.user.data.name}] [MAX-TOKENS:${req.body.max_tokens ?? "unset"}] ${prompt}`);
 
             let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
@@ -271,16 +279,23 @@ async function chatCompletions(req, res) {
     }
     else {
         try {
-            const response = await axios.post(
-                `https://api.openai.com/v1/chat/completions`, req.body,
-                {
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${key}`,
-                    },
-                },
-            );
+            let openAi = new OpenAIApi(new Configuration({ apiKey: key }));
+            let params = {}
+            Object.assign(params, req.body)
+            params.model |= MODEL;
+
+            const response = await openAi.createChatCompletion(params);
+
+            // const response = await axios.post(
+            //     `https://api.openai.com/v1/chat/completions`, req.body,
+            //     {
+            //         headers: {
+            //             Accept: "application/json",
+            //             "Content-Type": "application/json",
+            //             Authorization: `Bearer ${key}`,
+            //         },
+            //     },
+            // );
 
             if(DEBUG){
                 console.log("[chatCompletions]nostream response:")
@@ -292,6 +307,7 @@ async function chatCompletions(req, res) {
 
             return res.status(200).send(response.data);
         } catch (error) {
+            error.response && error.response.data && console.log(error.response.data)
             try {
                 error.response.data.error.message = error.response.data.error.message.replace(/org-[a-zA-Z0-9]+/, orgId);
                 return res.status(error.response.status).send(error.response.data);
