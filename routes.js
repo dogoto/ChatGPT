@@ -24,6 +24,11 @@ async function completions(req, res) {
                 input: req.body.prompt,
             });
 
+            if(DEBUG){
+                console.log("[completions]MODERATION response:")
+                console.log(response.data)
+            }
+
             if (response.data.results[0].flagged) {
                 res.set("Content-Type", "application/json");
                 return res.status(400).send({
@@ -35,7 +40,7 @@ async function completions(req, res) {
             }
         }
         catch (e) {
-
+            console.log("[completions]MODERATION error:", e)
         }
     }
 
@@ -52,6 +57,11 @@ async function completions(req, res) {
                     },
                 },
             );
+
+            if(DEBUG){
+                console.log("[completions]stream response:")
+                console.log(response.data)
+            }
 
             res.setHeader("content-type", "text/event-stream");
 
@@ -111,6 +121,11 @@ async function completions(req, res) {
                 },
             );
 
+            if(DEBUG){
+                console.log("[completions]nostream response:")
+                console.log(response.data)
+            }
+
             delete response.data.id;
             delete response.data.created;
 
@@ -157,6 +172,11 @@ async function chatCompletions(req, res) {
                 input: prompt,
             });
 
+            if(DEBUG){
+                console.log("[chatCompletions]MODERATION response:")
+                console.log(response.data)
+            }
+
             if (response.data.results[0].flagged) {
                 res.set("Content-Type", "application/json");
                 return res.status(400).send({
@@ -168,7 +188,7 @@ async function chatCompletions(req, res) {
             }
         }
         catch (e) {
-
+            console.log("[chatCompletions]MODERATION error:", e)
         }
     }
     else {
@@ -188,6 +208,11 @@ async function chatCompletions(req, res) {
                     },
                 },
             );
+
+            if(DEBUG){
+                console.log("[chatCompletions]stream response:")
+                console.log(response.data)
+            }
 
             res.setHeader("content-type", "text/event-stream");
 
@@ -249,6 +274,11 @@ async function chatCompletions(req, res) {
                     },
                 },
             );
+
+            if(DEBUG){
+                console.log("[chatCompletions]nostream response:")
+                console.log(response.data)
+            }
 
             delete response.data.id;
             delete response.data.created;
